@@ -149,7 +149,7 @@ const SampleConversationTitle = [
   {
     id: 5,
     title:
-      "1: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
+      "5: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
     chat: [
       {
         id: 1,
@@ -177,7 +177,7 @@ const SampleConversationTitle = [
   {
     id: 6,
     title:
-      "2: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
+      "6: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
     chat: [
       {
         id: 1,
@@ -205,7 +205,7 @@ const SampleConversationTitle = [
   {
     id: 7,
     title:
-      "3: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
+      "7: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
     chat: [
       {
         id: 1,
@@ -247,7 +247,7 @@ const SampleConversationTitle = [
   {
     id: 8,
     title:
-      "4: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
+      "8: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
     chat: [
       {
         id: 1,
@@ -283,7 +283,7 @@ const SampleConversationTitle = [
   {
     id: 10,
     title:
-      "2: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
+      "9: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
     chat: [
       {
         id: 1,
@@ -318,7 +318,7 @@ const SampleConversationTitle = [
   {
     id: 11,
     title:
-      "3: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
+      "10: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
     chat: [
       {
         id: 1,
@@ -367,7 +367,7 @@ const SampleConversationTitle = [
   {
     id: 12,
     title:
-      "4: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
+      "11: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
     chat: [
       {
         id: 1,
@@ -412,13 +412,6 @@ const SampleConversationTitle = [
           "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla facilisi. Curabitur in erat eget orci scelerisque hendrerit. Proin sed nulla a mi euismod convallis.",
       },
     ],
-  },
-
-  {
-    id: 23,
-    title:
-      "4: In publishing and graphic design, Lorem ipsum Lorem ipsum may be used as a placeholder before the final.",
-    chat: { id: 1, question: "123456789", answe: "123456789" },
   },
 ];
 export default SampleConversationTitle;

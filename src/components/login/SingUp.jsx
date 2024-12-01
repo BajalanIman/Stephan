@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReportIcon from "@mui/icons-material/Report";
 import axios from "axios";
+import adaptLogo from "./../../assets/Images/adaptLogo.png";
 
 const SingUp = () => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const SingUp = () => {
         setErrorMessage("");
       }, 5000);
     } else {
-      navigate("/blankpage");
+      navigate("/conversation");
       window.location.reload();
     }
 
@@ -78,8 +79,8 @@ const SingUp = () => {
 
   return (
     <div className="bg-gradient-to-r from-[#D9D9D9] to-[#E7F9EA] w-full h-screen flex flex-col justify-center items-center">
-      <p className="flex justify-center text-gray-300">AWH AI</p>
-      <div className="mt-16 h-30 flex flex-col justify-center items-center gap-3 ">
+      <img src={adaptLogo} className="w-20 opacity-50" />
+      <div className="mt-6 h-30 flex flex-col justify-center items-center gap-3 ">
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           Create an account
         </Typography>

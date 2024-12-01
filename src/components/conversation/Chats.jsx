@@ -1,56 +1,96 @@
-import { Box, Typography } from "@mui/material";
 import React from "react";
+import { Box, Button, Tooltip, Typography } from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import adaptLogo from "./../../assets/Images/adaptLogo.png";
 
-export const Chats = ({ customChat }) => {
-  console.log(customChat);
+const Chats = ({ customChat }) => {
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        console.log("Text copied to clipboard successfully!");
+      },
+      (err) => {
+        console.error("Failed to copy text: ", err);
+      }
+    );
+  };
+
   return (
-    <div className="h-[700px] overflow-y-scroll">
-      {customChat.map((e, index) => {
-        return (
-          <Box key={e.id} sx={{ mx: 25, mt: 3 }}>
-            <div className="py-3">
-              {index == 0 && (
-                <Typography sx={{ p: 2, pt: 0, pb: 1 }}>You</Typography>
-              )}
-              <Box
-                sx={{
-                  border: 1,
-                  borderColor: "gray",
-                  borderRadius: 5,
-                  borderBottomLeftRadius: 80,
-                  p: 3,
-                  bgcolor: "#A2C2B8",
-                  minWidth: 400,
-                  maxWidth: 500,
-                  width: "fit-content",
-                }}
-              >
-                <Typography>{e.question}</Typography>
-              </Box>
-            </div>
+    <div className="w-full h-[100%] min-h-screen pb-10">
+      {customChat.map((message) => (
+        <Box
+          key={message.message_id}
+          sx={{
+            marginTop: 2,
+            marginX: 25,
+            padding: 2,
+            // backgroundColor: "#f0f0f0",
+            borderRadius: "10px",
+          }}
+        >
+          <div key={message.message_id}>
+            <Typography sx={{ fontWeight: "bold" }}>You</Typography>
+            <Box
+              sx={{
+                border: 1,
+                borderColor: "gray",
+                borderRadius: 5,
+                borderBottomLeftRadius: 80,
+                p: 3,
+                bgcolor: "#A2C2B8",
+                minWidth: 400,
+                maxWidth: 500,
+                width: "fit-content",
+              }}
+            >
+              {message.question}
+            </Box>
+
             <div className="flex flex-col justify-end items-end py-3">
-              {index == 0 && (
-                <Typography sx={{ p: 2, pt: 0, pb: 1 }}>AI</Typography>
-              )}
+              <img src={adaptLogo} className="w-9" />
+
               <Box
                 sx={{
                   border: 1,
                   borderColor: "gray",
                   borderRadius: 5,
                   borderBottomRightRadius: 80,
-                  p: 3,
+                  padding: "10px 15px 15px 15px",
                   bgcolor: "#B8C2A2",
                   minWidth: 400,
                   maxWidth: 500,
                   width: "fit-content",
+                  height: "fit-content",
                 }}
               >
-                <Typography>{e.answer}</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "end",
+                    mt: 2,
+                  }}
+                >
+                  <Tooltip title="copy to clipboard" arrow>
+                    <ContentCopyIcon
+                      onClick={() => copyToClipboard(message.answer)}
+                      sx={{
+                        fill: "#565656",
+                        cursor: "pointer",
+                        ":hover": { fill: "blue" },
+                        ":active": { fill: "darkblue" },
+                      }}
+                      variant="contained"
+                    />
+                  </Tooltip>
+                </Box>
+                <Typography>{message.answer}</Typography>
               </Box>
             </div>
-          </Box>
-        );
-      })}
+          </div>
+        </Box>
+      ))}
     </div>
   );
 };
+
+export default Chats;
