@@ -6,6 +6,7 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 import axios from "axios";
 import LoadingPage from "./LoadingPage";
 import Chats from "./Chats";
+import AdminPanel from "../Admin/AdminPanel";
 
 const Conversation = () => {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -15,19 +16,31 @@ const Conversation = () => {
   const [answerAI, setAnswerAI] = useState("");
   const [conversations, setConversations] = useState([]);
   const [customConversationId, setCustomConversationId] = useState(null);
+  const [userId, setUserID] = useState(null);
+
+  // Set userId from localStorage and then fetch conversations
+  useEffect(() => {
+    const id = Number(localStorage.getItem("userId"));
+    setUserID(id);
+  }, []);
+
+  useEffect(() => {
+    if (userId !== null) {
+      fetchConversations(); // Fetch conversations once userId is set
+    }
+  }, [userId]); // This runs whenever userId changes
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8800/conversations");
-      setConversations(response.data);
+      const response = await axios.get(`http://127.0.0.1:8800/conversations`);
+      const filteredConversations = response.data.filter(
+        (e) => e.user_id === userId
+      );
+      setConversations(filteredConversations);
     } catch (error) {
       console.error("Error fetching conversations:", error);
     }
   };
-
-  useEffect(() => {
-    fetchConversations();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +50,7 @@ const Conversation = () => {
     setShowLoading(true);
 
     try {
-      // every time I hane to change this url
+      // every time I have to change this url
       const response = await axios.post(
         "http://34.105.180.17:5000/chat",
         payload,
@@ -56,7 +69,7 @@ const Conversation = () => {
         const conversationResponse = await axios.post(
           "http://127.0.0.1:8800/conversations",
           {
-            user_id: 1,
+            user_id: userId,
             title: searchInput.slice(0, 50),
           }
         );
@@ -67,7 +80,7 @@ const Conversation = () => {
       // Save the message in the database
       const newMessage = {
         conversation_id: conversationId,
-        user_id: 1,
+        user_id: userId,
         question: searchInput,
         answer: aiResponse,
       };
@@ -96,7 +109,7 @@ const Conversation = () => {
   };
 
   return (
-    <div className="w-full h-[100%] flex relative bg-gradient-to-r from-[#D9D9D9] to-[#E7F9EA]">
+    <div className="w-full h-[100%] flex relative bg-[#E7F9EA]">
       {!showSidebar && (
         <Box
           sx={{
@@ -146,16 +159,17 @@ const Conversation = () => {
               <IconButton onClick={() => setShowSidebar(false)}>
                 <ViewSidebarRounded sx={{ color: "#696969" }} />
               </IconButton>{" "}
-              <div
-                className="cursor-pointer flex"
-                onClick={() => {
-                  window.location.reload();
-                }}
-              >
+              <div className="cursor-pointer flex">
                 <Typography variant="body1" sx={{ fontWeight: "bold", ml: 2 }}>
                   Conversations
                 </Typography>
-                <AutorenewIcon />
+
+                <AutorenewIcon
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                />
+                <AdminPanel />
               </div>
             </>
           )}
@@ -199,6 +213,7 @@ const Conversation = () => {
                 top: 0,
                 pt: 5,
                 zIndex: 999,
+                bgcolor: "#E7F9EA",
               }}
             >
               <div className="w-full h-12 flex justify-center items-center ">

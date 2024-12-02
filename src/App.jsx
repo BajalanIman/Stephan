@@ -5,17 +5,19 @@ import React from "react";
 import Loggin from "./components/login/Loggin.jsx";
 import SingUp from "./components/login/SingUp.jsx";
 import Conversation from "./components/conversation/Conversation.jsx";
-import BlankPage from "./BlankPage.jsx";
+import DataProtection from "./components/login/DataProtection.jsx";
+import UserManagement from "./components/Admin/UserManagement.jsx";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route index element={<FirstPage />} />
+        <Route path="/dataProtection" index element={<DataProtection />} />
         <Route path="/loggin" index element={<Loggin />} />
         <Route path="/singup" index element={<SingUp />} />
         <Route path="/conversation" index element={<Conversation />} />
-        <Route path="/blankpage" index element={<BlankPage />} />
+        <Route path="/userManagement" index element={<UserManagement />} />
       </Routes>
     </Router>
   );
