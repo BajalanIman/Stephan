@@ -1,3 +1,4 @@
+import "./App.css";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary.jsx";
 import FirstPage from "./components/login/FirstPage.jsx";

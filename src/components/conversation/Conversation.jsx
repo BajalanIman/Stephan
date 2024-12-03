@@ -18,7 +18,6 @@ const Conversation = () => {
   const [customConversationId, setCustomConversationId] = useState(null);
   const [userId, setUserID] = useState(null);
 
-  // Set userId from localStorage and then fetch conversations
   useEffect(() => {
     const id = Number(localStorage.getItem("userId"));
     setUserID(id);
@@ -26,9 +25,9 @@ const Conversation = () => {
 
   useEffect(() => {
     if (userId !== null) {
-      fetchConversations(); // Fetch conversations once userId is set
+      fetchConversations();
     }
-  }, [userId]); // This runs whenever userId changes
+  }, [userId]);
 
   const fetchConversations = async () => {
     try {
@@ -52,7 +51,7 @@ const Conversation = () => {
     try {
       // every time I have to change this url
       const response = await axios.post(
-        "http://34.105.180.17:5000/chat",
+        "http://34.105.170.112:5000/chat",
         payload,
         {
           headers: {
@@ -77,7 +76,6 @@ const Conversation = () => {
         setCustomConversationId(conversationId);
       }
 
-      // Save the message in the database
       const newMessage = {
         conversation_id: conversationId,
         user_id: userId,
@@ -87,17 +85,15 @@ const Conversation = () => {
 
       await axios.post("http://127.0.0.1:8800/messages", newMessage);
 
-      // Update the current conversation with the new message
       setCustomChat((prevChat) => [
         ...prevChat,
         {
-          message_id: Math.random(), // Temporary unique key
+          message_id: Math.random(),
           question: searchInput,
           answer: aiResponse,
         },
       ]);
 
-      // Fetch conversations to update the list
       fetchConversations();
       setSearchInput("");
     } catch (error) {
@@ -160,7 +156,13 @@ const Conversation = () => {
                 <ViewSidebarRounded sx={{ color: "#696969" }} />
               </IconButton>{" "}
               <div className="cursor-pointer flex">
-                <Typography variant="body1" sx={{ fontWeight: "bold", ml: 2 }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontWeight: "bold",
+                    ml: 2,
+                  }}
+                >
                   Conversations
                 </Typography>
 

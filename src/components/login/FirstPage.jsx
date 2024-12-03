@@ -27,11 +27,13 @@ function FirstPage() {
       <Link to="/dataProtection">
         <img src={adaptLogo} className="w-20 opacity-70 cursor-pointer" />
       </Link>
-      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+      <Typography
+        variant="h5"
+        sx={{ fontWeight: "bold", fontFamily: "SourceSansPro" }}
+      >
         Get started
       </Typography>
       <Box sx={{ display: "flex", gap: 2 }}>
-        {/* <Link to="/loggin"></Link> */}
         <Button
           onClick={logginBtnHandler}
           style={{
