@@ -189,7 +189,7 @@ const DataProtection = () => {
             via email.
           </Typography>
           <Typography variant="body1" paragraph>
-            Thank you for your interest in this important topic.
+            Thank you for your interest in this important topic!
           </Typography>
         </Box>
       </Box>
