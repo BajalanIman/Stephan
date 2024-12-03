@@ -105,7 +105,7 @@ const Conversation = () => {
   };
 
   return (
-    <div className="w-full h-[100%] flex relative bg-[#E7F9EA]">
+    <div className="w-full h-[100%] flex relative">
       {!showSidebar && (
         <Box
           sx={{
@@ -215,7 +215,6 @@ const Conversation = () => {
                 top: 0,
                 pt: 5,
                 zIndex: 999,
-                bgcolor: "#E7F9EA",
               }}
             >
               <div className="w-full h-12 flex justify-center items-center ">

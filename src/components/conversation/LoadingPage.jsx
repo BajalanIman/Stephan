@@ -4,7 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const LoadingPage = () => {
   return (
-    <div className="h-screen w-full absolute flex justify-center top-0 left-0 bg-[#E7F9EA]">
+    <div className="h-screen w-full absolute flex justify-center top-0 left-0">
       <Stack spacing={2} direction="row" alignItems="center">
         <CircularProgress size={70} />
       </Stack>
