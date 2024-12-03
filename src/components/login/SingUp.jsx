@@ -1,4 +1,4 @@
-import { Box, Button, Input, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ReportIcon from "@mui/icons-material/Report";
@@ -65,9 +65,8 @@ const SingUp = () => {
       last_login_at: "2024-08-26T22:00:00.000Z",
     };
     axios.post(`http://localhost:8800/users`, data).then((res) => {
-      console.log(res.data);
+      localStorage.setItem("userId", res.data.user_id);
       if (res.data.message == "Record inserted successfully") {
-        console.log("Record submited successfully");
         setUsername(""),
           setFirstName(""),
           setLastName(""),
@@ -79,7 +78,9 @@ const SingUp = () => {
 
   return (
     <div className="bg-gradient-to-r from-[#D9D9D9] to-[#E7F9EA] w-full h-screen flex flex-col justify-center items-center">
-      <img src={adaptLogo} className="w-20 opacity-50" />
+      <Link to="/dataProtection">
+        <img src={adaptLogo} className="w-20 opacity-70 cursor-pointer" />
+      </Link>
       <div className="mt-6 h-30 flex flex-col justify-center items-center gap-3 ">
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           Create an account

@@ -27,6 +27,9 @@ function Loggin() {
       if (response.data.exists) {
         setUserExists(true);
         console.log("User exists:", response.data.user);
+        localStorage.setItem("userId", response.data.user.user_id);
+        localStorage.setItem("email", response.data.user.email);
+        localStorage.setItem("password", response.data.user.password);
         navigate("/conversation");
         window.location.reload();
       } else {
@@ -45,31 +48,11 @@ function Loggin() {
     }
   };
 
-  // const loginBtn = () => {
-  //   if (importedEmail && !importedEmail.includes("@")) {
-  //     setErrorEmail(true);
-  //     setErrorMessage("Email is not valid.");
-  //     setTimeout(() => {
-  //       setErrorEmail(false);
-  //       setErrorMessage("");
-  //     }, 4000);
-  //   } else if (inputPassword && inputPassword.length < 8) {
-  //     setErrorPassword(true);
-  //     setErrorMessage("Password is not correct.");
-  //     setTimeout(() => {
-  //       setErrorPassword(false);
-  //       setErrorMessage("");
-  //     }, 4000);
-  //   } else {
-  //     console.log("login");
-  //     setImportedEmail("");
-  //     setInputPassword("");
-  //   }
-  // };
-
   return (
     <div className="bg-gradient-to-r from-[#D9D9D9] to-[#E7F9EA] w-full h-screen flex flex-col justify-center items-center">
-      <img src={adaptLogo} className="w-20 opacity-50" />
+      <Link to="/dataProtection">
+        <img src={adaptLogo} className="w-20 opacity-70 cursor-pointer" />
+      </Link>{" "}
       <div className="mt-6 h-30 flex flex-col justify-center items-center gap-3 ">
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>
           Welcome back

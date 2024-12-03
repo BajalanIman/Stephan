@@ -1,0 +1,6 @@
+@font-face {
+  font-family: "SourceSansPro"; /* Name the font */
+  src: url("/fonts/SourceSansPro-Black.oft") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}

@@ -1,8 +1,10 @@
 import express from "express";
-import mysql from "mysql";
 import cors from "cors";
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 const app = express();
+
 app.use(
   cors({
     origin: "*",
@@ -13,34 +15,25 @@ app.use(
 app.use(express.static("public"));
 app.use(express.json());
 
-//-------------------------------------------------------------------------
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "stephan_phd",
-});
+// -------------------------------------------------------------------------
 
-//-------------------------------------------------------------------------
 app.get("/", (req, res) => {
   res.json("Hello, this is the backend!");
 });
 
-//get -------------------------------------------------------------------------
-app.get("/users", (req, res) => {
-  /* const q = "SELECT * FROM users where name = 'name'  "; */
-  const q = "SELECT * FROM users";
-  db.query(q, (err, data) => {
-    if (err) {
-      console.log(err);
-      return res.json(err);
-    }
-    return res.json(data);
-  });
+// GET /users ----------------------------------------------------------------
+app.get("/users", async (req, res) => {
+  try {
+    const users = await prisma.user.findMany();
+    return res.json(users);
+  } catch (err) {
+    console.log(err);
+    return res.json(err);
+  }
 });
-//post -------------------------------------------------------------------------
-// Create an API endpoint to insert a new record:
-app.post("/users", (req, res) => {
+
+// POST /users ----------------------------------------------------------------
+app.post("/users", async (req, res) => {
   const {
     created_at,
     date_of_birth,
@@ -50,57 +43,60 @@ app.post("/users", (req, res) => {
     last_name,
     password,
     user_config_id,
-    user_id,
     username,
   } = req.body;
 
-  const insertQuery =
-    "INSERT INTO users (created_at, date_of_birth,email, first_name,last_login_at,last_name,password,user_config_id,user_id, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  try {
+    const newUser = await prisma.user.create({
+      data: {
+        created_at,
+        date_of_birth,
+        email,
+        first_name,
+        last_login_at,
+        last_name,
+        password,
+        user_config_id,
+        username,
+      },
+    });
 
-  db.query(
-    insertQuery,
-    [
-      created_at,
-      date_of_birth,
-      email,
-      first_name,
-      last_login_at,
-      last_name,
-      password,
-      user_config_id,
-      user_id,
-      username,
-    ],
-    (err, result) => {
-      if (err) {
-        console.error("Error inserting record:", err);
-        return res.status(500).json({ error: "Error inserting record" });
-      }
-      return res.status(201).json({ message: "Record inserted successfully" });
-    }
-  );
+    const userId = newUser.user_id;
+
+    return res
+      .status(201)
+      .json({ message: "Record inserted successfully", user_id: userId });
+  } catch (err) {
+    console.error("Error inserting record:", err);
+    return res.status(500).json({ error: "Error inserting record" });
+  }
 });
-// another post for login
-app.post("/check-user", (req, res) => {
+
+// POST /check-user ---------------------------------------------------------
+app.post("/check-user", async (req, res) => {
   const { email, password } = req.body;
 
-  const query = "SELECT * FROM users WHERE email = ? AND password = ?";
-
-  db.query(query, [email, password], (err, results) => {
-    if (err) {
-      console.error("Error querying database:", err);
-      return res.status(500).json({ error: "Database query error" });
-    }
-    if (results.length > 0) {
-      return res.status(200).json({ exists: true, user: results[0] });
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email,
+        password,
+      },
+    });
+    if (user) {
+      return res.status(200).json({ exists: true, user });
     } else {
       return res.status(404).json({ exists: false, message: "User not found" });
     }
-  });
+  } catch (err) {
+    console.error("Error querying database:", err);
+    return res.status(500).json({ error: "Database query error" });
+  }
 });
 
-//Create an API endpoint to update a record:
-app.put("/users/:id", (req, res) => {
+// PUT /users/:id ------------------------------------------------------------
+app.put("/users/:id", async (req, res) => {
+  const { id } = req.params;
   const {
     created_at,
     date_of_birth,
@@ -110,172 +106,121 @@ app.put("/users/:id", (req, res) => {
     last_name,
     password,
     user_config_id,
-    user_id,
     username,
   } = req.body;
-  const { id } = req.params;
 
-  const updateQuery =
-    "UPDATE users SET user_id=?, user_config_id=?, first_name=?, last_name=?, password=?, username=?, email=?, date_of_birth=?, created_at=?, last_login_at=?";
-
-  db.query(
-    updateQuery,
-    [
-      user_id,
-      user_config_id,
-      first_name,
-      last_name,
-      password,
-      username,
-      email,
-      date_of_birth,
-      created_at,
-      last_login_at,
-      id,
-    ],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({ error: "Error updating record" });
-      }
-      return res.status(200).json({ message: "Record updated successfully" });
-    }
-  );
+  try {
+    await prisma.user.update({
+      where: { user_id: Number(id) },
+      data: {
+        created_at,
+        date_of_birth,
+        email,
+        first_name,
+        last_login_at,
+        last_name,
+        password,
+        user_config_id,
+        username,
+      },
+    });
+    return res.status(200).json({ message: "Record updated successfully" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Error updating record" });
+  }
 });
 
-//Create an API endpoint to delete a record:
-app.delete("/users/:id", (req, res) => {
+// DELETE /users/:id ---------------------------------------------------------
+app.delete("/users/:id", async (req, res) => {
   const { id } = req.params;
 
-  const deleteQuery = "DELETE FROM users WHERE user_id=?";
-
-  db.query(deleteQuery, [id], (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({ error: "Error deleting record" });
-    }
+  try {
+    await prisma.user.delete({
+      where: { user_id: Number(id) },
+    });
     return res.status(200).json({ message: "Record deleted successfully" });
-  });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: "Error deleting record" });
+  }
 });
-//************************************************************* */
-// Fetch all conversations and their messages
-// API to fetch all conversations and their messages
-app.get("/conversations", (req, res) => {
-  const query = `
-    SELECT c.conversation_id, c.title, c.created_at AS conversation_created_at,
-           m.message_id, m.question, m.answer, m.created_at AS message_created_at
-    FROM conversations c
-    LEFT JOIN messages m ON c.conversation_id = m.conversation_id
-    ORDER BY c.created_at DESC, m.created_at ASC
-  `;
 
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error fetching conversations:", err);
-      return res.status(500).json({ error: "Error fetching conversations" });
-    }
-
-    // Group messages by conversation_id
-    const conversations = results.reduce((acc, row) => {
-      const {
-        conversation_id,
-        title,
-        conversation_created_at,
-        message_id,
-        question,
-        answer,
-        message_created_at,
-      } = row;
-
-      // Find or create a conversation object
-      let conversation = acc.find(
-        (conv) => conv.conversation_id === conversation_id
-      );
-      if (!conversation) {
-        conversation = {
-          conversation_id,
-          title,
-          created_at: conversation_created_at,
-          messages: [],
-        };
-        acc.push(conversation);
-      }
-
-      // If there are messages, push them into the conversation's message array
-      if (message_id) {
-        conversation.messages.push({
-          message_id,
-          question,
-          answer,
-          created_at: message_created_at,
-        });
-      }
-
-      return acc;
-    }, []);
-
+// GET /conversations --------------------------------------------------------
+app.get("/conversations", async (req, res) => {
+  try {
+    const conversations = await prisma.conversation.findMany({
+      include: {
+        messages: true,
+      },
+      orderBy: {
+        created_at: "desc",
+      },
+    });
     return res.status(200).json(conversations);
-  });
+  } catch (err) {
+    console.error("Error fetching conversations:", err);
+    return res.status(500).json({ error: "Error fetching conversations" });
+  }
 });
 
-// POST /conversations - Create a new conversation
-app.post("/conversations", (req, res) => {
+// POST /conversations -------------------------------------------------------
+app.post("/conversations", async (req, res) => {
   const { user_id, title } = req.body;
 
   if (!user_id || !title) {
     return res.status(400).json({ error: "user_id and title are required" });
   }
 
-  const insertQuery = `
-    INSERT INTO conversations (user_id, title) 
-    VALUES (?, ?)
-  `;
-
-  db.query(insertQuery, [user_id, title], (err, result) => {
-    if (err) {
-      console.error("Error creating conversation:", err);
-      return res.status(500).json({ error: "Error creating conversation" });
-    }
+  try {
+    const conversation = await prisma.conversation.create({
+      data: {
+        user_id,
+        title,
+      },
+    });
     return res.status(201).json({
       message: "Conversation created successfully",
-      id: result.insertId, // Return the id of the newly created conversation
+      id: conversation.conversation_id,
     });
-  });
+  } catch (err) {
+    console.error("Error creating conversation:", err);
+    return res.status(500).json({ error: "Error creating conversation" });
+  }
 });
 
-// POST /messages - Save a message
-app.post("/messages", (req, res) => {
+// POST /messages ------------------------------------------------------------
+app.post("/messages", async (req, res) => {
   const { conversation_id, user_id, question, answer } = req.body;
-  const query = `
-    INSERT INTO messages (conversation_id, user_id, question, answer)
-    VALUES (?, ?, ?, ?)
-  `;
-  db.query(
-    query,
-    [conversation_id, user_id, question, answer],
-    (err, result) => {
-      if (err) {
-        console.error("Error saving message:", err);
-        return res.status(500).json({ error: "Error saving message" });
-      }
-      return res.status(201).json({
-        message: "Message saved successfully",
-        message_id: result.insertId,
-      });
-    }
-  );
+
+  try {
+    const message = await prisma.message.create({
+      data: {
+        conversation_id,
+        user_id,
+        question,
+        answer,
+      },
+    });
+    return res.status(201).json({
+      message: "Message saved successfully",
+      message_id: message.message_id,
+    });
+  } catch (err) {
+    console.error("Error saving message:", err);
+    return res.status(500).json({ error: "Error saving message" });
+  }
 });
-// GET /messages - Save a message
-app.get("/messages", (req, res) => {
-  const query = "SELECT * FROM messages";
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error fetching messages:", err);
-      res.status(500).json({ error: "Error fetching messages" });
-    } else {
-      res.status(200).json(results);
-    }
-  });
+
+// GET /messages -------------------------------------------------------------
+app.get("/messages", async (req, res) => {
+  try {
+    const messages = await prisma.message.findMany();
+    return res.status(200).json(messages);
+  } catch (err) {
+    console.error("Error fetching messages:", err);
+    res.status(500).json({ error: "Error fetching messages" });
+  }
 });
 
 app.listen(8800, () => {
