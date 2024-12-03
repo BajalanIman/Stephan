@@ -23,7 +23,7 @@ function FirstPage() {
     }
   };
   return (
-    <div className="bg-gradient-to-r from-[#D9D9D9] to-[#E7F9EA] w-full h-screen flex flex-col justify-center items-center gap-8">
+    <div className="w-full h-screen flex flex-col justify-center items-center gap-8">
       <Link to="/dataProtection">
         <img src={adaptLogo} className="w-20 opacity-70 cursor-pointer" />
       </Link>

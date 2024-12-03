@@ -6,7 +6,6 @@ import {
   TableRow,
   TableCell,
   Paper,
-  Button,
   Box,
   Typography,
 } from "@mui/material";
@@ -30,26 +29,24 @@ const UserManagement = () => {
   }, []);
 
   return (
-    <div className="flex w-full h-screen justify-center bg-[#e4e9e4]">
-      <Box sx={{ width: "1450px" }}>
+    <div className="flex w-full h-screen justify-center">
+      <Box sx={{ maxWidth: "1450px" }}>
         <Typography
           variant="h4"
           sx={{
-            fontFamily: "Abril Fatface",
-            fontWeight: 400,
+            fontWeight: 600,
             textAlign: "center",
             marginY: "10px",
           }}
         >
           List of users in the database
         </Typography>
-        <TableContainer component={Paper} sx={{ maxHeight: "700px" }}>
+        <TableContainer component={Paper} sx={{ maxHeight: "450px" }}>
           <Table aria-label="simple table" stickyHeader>
-            <thead>
+            <TableHead>
               <TableRow>
                 <TableCell
                   sx={{
-                    display: { xs: "none", sm: "flex", md: "flex" },
                     fontWeight: "bold",
                     backgroundColor: "#a1d6b2",
                   }}
@@ -68,7 +65,6 @@ const UserManagement = () => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    display: { xs: "none", sm: "none", md: "flex" },
                     fontWeight: "bold",
                     backgroundColor: "#a1d6b2",
                   }}
@@ -87,7 +83,6 @@ const UserManagement = () => {
                 </TableCell>
                 <TableCell
                   sx={{
-                    display: { xs: "none", sm: "none", md: "flex" },
                     fontWeight: "bold",
                     backgroundColor: "#a1d6b2",
                   }}
@@ -95,33 +90,53 @@ const UserManagement = () => {
                   Password
                 </TableCell>
               </TableRow>
-            </thead>
-            <tbody>
+            </TableHead>
+            <TableBody>
               {usersFromDatabase.map((e, index) => (
-                <TableRow hover role="checkbox" key={e.user_id}>
+                <TableRow
+                  hover
+                  role="checkbox"
+                  key={e.user_id}
+                  sx={{ height: "35px" }}
+                >
                   <TableCell
                     component="th"
-                    sx={{ display: { xs: "none", sm: "flex", md: "flex" } }}
+                    sx={{
+                      display: { xs: "none", sm: "flex", md: "flex" },
+                      padding: "8px 16px", // Adjust padding for smaller rows
+                    }}
                   >
                     {index + 1}
                   </TableCell>
-                  <TableCell>{e.first_name}</TableCell>
-                  <TableCell>{e.last_name}</TableCell>
+                  <TableCell sx={{ padding: "8px 16px" }}>
+                    {e.first_name}
+                  </TableCell>
+                  <TableCell sx={{ padding: "8px 16px" }}>
+                    {e.last_name}
+                  </TableCell>
                   <TableCell
-                    sx={{ display: { xs: "none", sm: "none", md: "flex" } }}
+                    sx={{
+                      display: { xs: "none", sm: "none", md: "flex" },
+                      padding: "8px 16px",
+                    }}
                   >
                     {e.username}
                   </TableCell>
-                  <TableCell>{e.email}</TableCell>
+                  <TableCell sx={{ padding: "8px 16px" }}>{e.email}</TableCell>
                   <TableCell
-                    sx={{ display: { xs: "none", sm: "none", md: "flex" } }}
+                    sx={{
+                      display: { xs: "none", sm: "none", md: "flex" },
+                      padding: "8px 16px",
+                    }}
                   >
                     {e.role}Normal
                   </TableCell>
-                  <TableCell>{e.password}</TableCell>
+                  <TableCell sx={{ padding: "8px 16px" }}>
+                    {e.password}
+                  </TableCell>
                 </TableRow>
               ))}
-            </tbody>
+            </TableBody>
           </Table>
         </TableContainer>
       </Box>
