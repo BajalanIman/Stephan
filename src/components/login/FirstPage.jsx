@@ -31,7 +31,7 @@ function FirstPage() {
         variant="h5"
         sx={{ fontWeight: "bold", fontFamily: "SourceSansPro" }}
       >
-        Get started
+        Get started!!!
       </Typography>
       <Box sx={{ display: "flex", gap: 2 }}>
         <Button
