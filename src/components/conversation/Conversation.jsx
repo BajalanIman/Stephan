@@ -7,6 +7,7 @@ import axios from "axios";
 import LoadingPage from "./LoadingPage";
 import Chats from "./Chats";
 import AdminPanel from "../Admin/AdminPanel";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const Conversation = () => {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -49,16 +50,11 @@ const Conversation = () => {
     setShowLoading(true);
 
     try {
-      // every time I have to change this url
-      const response = await axios.post(
-        "http://34.105.170.112:5000/chat",
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post("http://127.0.0.1:5000/chat", payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       const aiResponse = response.data.response;
       setAnswerAI(aiResponse);
@@ -113,7 +109,7 @@ const Conversation = () => {
             display: "flex",
             position: "fixed",
             left: 8,
-            top: 45,
+            top: { xs: 10, md: 45 },
             zIndex: 2000,
           }}
         >
@@ -122,6 +118,7 @@ const Conversation = () => {
           </IconButton>
           <Tooltip title="New conversation" arrow>
             <IconButton
+              sx={{ color: "#696969" }}
               onClick={() => {
                 window.location.reload();
               }}
@@ -149,55 +146,83 @@ const Conversation = () => {
           zIndex: 1000,
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box
+          sx={{
+            position: "relative",
+          }}
+        >
           {showSidebar && (
-            <>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                position: "absolute",
+                top: { xs: -30, md: 0 },
+                width: "100%",
+                paddingRight: 5,
+                gap: 2,
+              }}
+            >
               <IconButton onClick={() => setShowSidebar(false)}>
                 <ViewSidebarRounded sx={{ color: "#696969" }} />
-              </IconButton>{" "}
-              <div className="cursor-pointer flex">
-                <Typography
-                  variant="body1"
-                  sx={{
-                    fontWeight: "bold",
-                    ml: 2,
-                  }}
-                >
-                  Conversations
-                </Typography>
-
-                <AutorenewIcon
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                />
-                <AdminPanel />
-              </div>
-            </>
+              </IconButton>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontWeight: "bold",
+                }}
+              >
+                Conversations
+              </Typography>
+              <AutorenewIcon
+                onClick={() => {
+                  window.location.reload();
+                }}
+              />
+              <AdminPanel />
+            </Box>
           )}
         </Box>
-        <Box sx={{ overflowY: "scroll", mb: 2, height: "100%" }}>
+        <Box sx={{ overflowY: "scroll", mb: 1, height: "100%", mt: 5 }}>
           {conversations.map((conv) => (
-            <Typography
+            <Box
               key={conv.conversation_id}
-              variant="body1"
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
               className={`${
                 customConversationId === conv.conversation_id
-                  ? "whitespace-nowrap overflow-hidden text-ellipsis max-w-60 bg-gray-200 hover:bg-gray-200 active:bg-gray-300 p-1 hover:rounded-lg rounded-lg"
-                  : "whitespace-nowrap overflow-hidden text-ellipsis max-w-60 hover:bg-gray-200 active:bg-gray-300 px-2 py-1 hover:rounded-lg rounded-lg"
+                  ? " max-w-80 bg-gray-200 hover:bg-gray-200 active:bg-gray-300 p-1 hover:rounded-lg rounded-lg"
+                  : " max-w-80 hover:bg-gray-200 active:bg-gray-300 px-2 py-1 hover:rounded-lg rounded-lg"
               }`}
-              onClick={() => {
-                setCustomChat(conv.messages || []);
-                setCustomConversationId(conv.conversation_id);
-              }}
-              sx={{ cursor: "pointer" }}
             >
-              {conv.title}
-            </Typography>
+              <Typography
+                key={conv.conversation_id}
+                variant="body1"
+                className={`${
+                  customConversationId === conv.conversation_id
+                    ? "whitespace-nowrap overflow-hidden text-ellipsis"
+                    : "whitespace-nowrap overflow-hidden text-ellipsis"
+                }`}
+                onClick={() => {
+                  setCustomChat(conv.messages || []);
+                  setCustomConversationId(conv.conversation_id);
+                }}
+                sx={{ cursor: "pointer" }}
+              >
+                {conv.title}
+              </Typography>
+              <DeleteForeverIcon
+                style={{ color: "gray", width: 16, cursor: "pointer" }}
+              />
+            </Box>
           ))}
         </Box>
       </Box>
-      <div className="w-[100%] flex justify-center">
+      <div className="w-[100%] flex justify-center ">
         <div className="w-[1500px]">
           <Box
             sx={{
@@ -218,7 +243,19 @@ const Conversation = () => {
               }}
             >
               <div className="w-full h-12 flex justify-center items-center ">
-                <div className="w-3/4 h-12 flex bg-gray-50 justify-between px-4 border rounded-full items-center border-gray-400">
+                <Box
+                  sx={{
+                    width: 2 / 4,
+                    h: 12,
+                    backgroundColor: "#F9FAFB",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    borderRadius: 100,
+                    alignItems: "center",
+                    border: "1px solid gray",
+                    paddingX: 3,
+                  }}
+                >
                   <input
                     onChange={(e) => setSearchInput(e.target.value)}
                     value={searchInput}
@@ -232,7 +269,7 @@ const Conversation = () => {
                       cursor: searchInput.length ? "pointer" : "text",
                     }}
                   />
-                </div>
+                </Box>
               </div>
             </Box>
             {showLoading ? <LoadingPage /> : <Chats customChat={customChat} />}

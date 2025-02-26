@@ -30,6 +30,9 @@ function Loggin() {
         localStorage.setItem("userId", response.data.user.user_id);
         localStorage.setItem("email", response.data.user.email);
         localStorage.setItem("password", response.data.user.password);
+        localStorage.setItem("first_name", response.data.user.first_name);
+        localStorage.setItem("last_name", response.data.user.last_name);
+
         navigate("/conversation");
         window.location.reload();
       } else {

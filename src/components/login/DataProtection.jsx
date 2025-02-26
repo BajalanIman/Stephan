@@ -5,7 +5,8 @@ import adaptLogo from "./../../assets/Images/adaptLogo.png";
 
 const DataProtection = () => {
   return (
-    <div className="w-full h-[100%] flex  justify-center items-center px-2 relative">
+    <div className="w-full h-[100%] flex  justify-center items-center px-2 relative opacity-90">
+      <div className="absolute inset-0 bg-white opacity-70"></div>
       <Box
         sx={{
           mt: { xs: 4, md: 4 },
@@ -13,6 +14,7 @@ const DataProtection = () => {
           width: "full",
           maxWidth: "1200px",
           color: "black",
+          position: "relative",
         }}
       >
         <Link to="/">

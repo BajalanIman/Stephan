@@ -1,37 +1,65 @@
-import { Box, Typography } from "@mui/material";
-import React from "react";
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { Link, useNavigate } from "react-router-dom";
+import { Box, Typography, Menu, MenuItem } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import LogoutModal from "./LogoutModal";
+import adaptLogo from "./../../assets/Images/adaptLogo.png";
 
 const AdminPanel = () => {
-  const Navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const buttonRef = useRef(null); // Ref for the trigger element
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const Logout = () => {
+
+  // When closing, move focus back to the trigger element.
+  const handleClose = () => {
     setAnchorEl(null);
+    if (buttonRef.current) {
+      buttonRef.current.focus();
+    }
   };
 
-  const CloseHandler = () => {
-    setAnchorEl(null);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const openLogoutModal = () => {
+    setShowLogoutModal(true);
+    handleClose();
+  };
+
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+    handleClose();
     localStorage.removeItem("email");
     localStorage.removeItem("password");
     localStorage.removeItem("userId");
-    Navigate("/");
+    localStorage.removeItem("first_name");
+    localStorage.removeItem("last_name");
+    navigate("/");
   };
 
   const userManagementHandler = () => {
-    setAnchorEl(null);
-    Navigate("/userManagement");
+    handleClose();
+    navigate("/userManagement");
   };
 
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("first_name")) {
+      setName(localStorage.getItem("first_name"));
+    }
+    if (localStorage.getItem("last_name")) {
+      setLastName(localStorage.getItem("last_name"));
+    }
+  }, []);
+
   return (
-    <Box sx={{}}>
+    <Box sx={{ position: "relative" }}>
       <Box
+        ref={buttonRef} // Attach ref here
         id="basic-button"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
@@ -40,41 +68,67 @@ const AdminPanel = () => {
         sx={{
           marginTop: 0.3,
           marginLeft: 3,
-          width: 22,
-          height: 22,
-          bgcolor: "#696969",
+          width: 30,
+          height: 30,
+          bgcolor: "#2E4053",
           border: "1px solid black",
           borderRadius: "100%",
           display: "flex",
+          flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
           cursor: "pointer",
           ":hover": { bgcolor: "#4C4C4C", color: "white" },
         }}
+        tabIndex={0} // Ensure the element is focusable
       >
-        <Typography
-          sx={{
-            fontWeight: "bold",
-            fontFamily: "senrif",
-            color: "white",
-            fontSize: "12px",
-          }}
-        >
-          P.A
-        </Typography>
+        {!!name && (
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              fontFamily: "serif",
+              color: "white",
+              fontSize: "12px",
+            }}
+          >
+            {name.at(0)}&#x2022;
+          </Typography>
+        )}
+        {!!lastName && (
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              fontFamily: "serif",
+              color: "white",
+              fontSize: "12px",
+            }}
+          >
+            {lastName.at(0)}
+          </Typography>
+        )}
+        {!name && !lastName && (
+          <img src={adaptLogo} className="bg-white border rounded-full" />
+        )}
       </Box>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={Logout}
+        onClose={handleClose}
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
       >
         <MenuItem onClick={userManagementHandler}>User management</MenuItem>
-        <MenuItem onClick={CloseHandler}>Logout</MenuItem>
+        <MenuItem onClick={openLogoutModal}>Logout</MenuItem>
       </Menu>
+      <Box>
+        <LogoutModal
+          open={showLogoutModal}
+          onClose={() => setShowLogoutModal(false)}
+          onLogout={handleLogout}
+        />
+      </Box>
     </Box>
   );
 };

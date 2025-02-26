@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import adaptLogo from "./../../assets/Images/adaptLogo.png";
+import { Link } from "react-router-dom";
 
 const UserManagement = () => {
   const [usersFromDatabase, setUsersFromDatabase] = useState([]);
@@ -31,6 +33,16 @@ const UserManagement = () => {
   return (
     <div className="flex w-full h-screen justify-center">
       <Box sx={{ maxWidth: "1450px" }}>
+        <Link
+          to="/conversation"
+          style={{
+            display: "flex",
+            width: 150,
+            justifyContent: "center",
+          }}
+        >
+          <img src={adaptLogo} className="w-24 h-24 cursor-pointer" />
+        </Link>
         <Typography
           variant="h4"
           sx={{
@@ -45,46 +57,71 @@ const UserManagement = () => {
           <Table aria-label="simple table" stickyHeader>
             <TableHead>
               <TableRow>
+                {/* Hidden on xs and sm, visible on md and up */}
                 <TableCell
                   sx={{
                     fontWeight: "bold",
-                    backgroundColor: "#a1d6b2",
+                    backgroundColor: "#2E4053",
+                    color: "white",
+                    display: { xs: "none", sm: "none", md: "table-cell" },
                   }}
                 >
                   No.
                 </TableCell>
                 <TableCell
-                  sx={{ fontWeight: "bold", backgroundColor: "#a1d6b2" }}
+                  sx={{
+                    fontWeight: "bold",
+                    backgroundColor: "#2E4053",
+                    color: "white",
+                  }}
                 >
                   First name
                 </TableCell>
                 <TableCell
-                  sx={{ fontWeight: "bold", backgroundColor: "#a1d6b2" }}
+                  sx={{
+                    fontWeight: "bold",
+                    backgroundColor: "#2E4053",
+                    color: "white",
+                  }}
                 >
                   Last name
                 </TableCell>
                 <TableCell
                   sx={{
                     fontWeight: "bold",
-                    backgroundColor: "#a1d6b2",
+                    backgroundColor: "#2E4053",
+                    color: "white",
                   }}
                 >
-                  username
+                  Username
                 </TableCell>
+                {/* Hidden on xs and sm */}
                 <TableCell
-                  sx={{ fontWeight: "bold", backgroundColor: "#a1d6b2" }}
+                  sx={{
+                    fontWeight: "bold",
+                    backgroundColor: "#2E4053",
+                    color: "white",
+                    display: { xs: "none", sm: "none", md: "table-cell" },
+                  }}
                 >
                   Email
                 </TableCell>
                 <TableCell
-                  sx={{ fontWeight: "bold", backgroundColor: "#a1d6b2" }}
+                  sx={{
+                    fontWeight: "bold",
+                    backgroundColor: "#2E4053",
+                    color: "white",
+                    display: { xs: "none", sm: "none", md: "table-cell" },
+                  }}
                 >
                   Role
                 </TableCell>
                 <TableCell
                   sx={{
                     fontWeight: "bold",
-                    backgroundColor: "#a1d6b2",
+                    backgroundColor: "#2E4053",
+                    color: "white",
+                    display: { xs: "none", sm: "none", md: "table-cell" },
                   }}
                 >
                   Password
@@ -99,11 +136,12 @@ const UserManagement = () => {
                   key={e.user_id}
                   sx={{ height: "35px" }}
                 >
+                  {/* Hidden on xs and sm */}
                   <TableCell
                     component="th"
                     sx={{
-                      display: { xs: "none", sm: "flex", md: "flex" },
-                      padding: "8px 16px", // Adjust padding for smaller rows
+                      display: { xs: "none", sm: "none", md: "table-cell" },
+                      padding: "8px 16px",
                     }}
                   >
                     {index + 1}
@@ -114,24 +152,32 @@ const UserManagement = () => {
                   <TableCell sx={{ padding: "8px 16px" }}>
                     {e.last_name}
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      display: { xs: "none", sm: "none", md: "flex" },
-                      padding: "8px 16px",
-                    }}
-                  >
+                  <TableCell sx={{ padding: "8px 16px" }}>
                     {e.username}
                   </TableCell>
-                  <TableCell sx={{ padding: "8px 16px" }}>{e.email}</TableCell>
+                  {/* Hidden on xs and sm */}
                   <TableCell
                     sx={{
-                      display: { xs: "none", sm: "none", md: "flex" },
+                      display: { xs: "none", sm: "none", md: "table-cell" },
                       padding: "8px 16px",
                     }}
                   >
-                    {e.role}Normal
+                    {e.email}
                   </TableCell>
-                  <TableCell sx={{ padding: "8px 16px" }}>
+                  <TableCell
+                    sx={{
+                      display: { xs: "none", sm: "none", md: "table-cell" },
+                      padding: "8px 16px",
+                    }}
+                  >
+                    {e.role}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      display: { xs: "none", sm: "none", md: "table-cell" },
+                      padding: "8px 16px",
+                    }}
+                  >
                     {e.password}
                   </TableCell>
                 </TableRow>
